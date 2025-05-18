@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Birthday Wishes from Karim</title>
+<style>
+  /* Reset & base */
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #ffe6f0, #ffccff);
+    overflow-x: hidden;
+    color: #4a0033;
+  }
+  .container {
+    max-width: 600px;
+    margin: 2rem auto;
+    text-align: center;
+    padding: 0 1rem;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  input, button {
+    font-size: 1.1rem;
+  }
+  input {
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 2px solid #d6336c;
+    width: 80%;
+    max-width: 300px;
+    margin-bottom: 1.2rem;
+    outline: none;
+  }
+  button {
+    background-color: #d6336c;
+    border: none;
+    color: white;
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 0.5rem;
+    transition: background-color 0.3s ease;
+  }
+  button:hover:not(:disabled) {
+    background-color: #a02a53;
+  }
+  button:disabled {
+    background-color: #e6a3bc;
+    cursor: not-allowed;
+  }
+
+  /* Pages styling */
+  .page {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+    animation: fadeIn 0.6s ease forwards;
+  }
+  .page.active {
+    display: flex;
+  }
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+
+  /* Heart styling */
+  #heart {
+    font-size: 4.5rem;
+    color: #d6336c;
+    cursor: pointer;
+    user-select: none;
+    margin: 2rem 0;
+    transition: transform 0.3s ease, text-shadow 0.3s ease;
+  }
+  #heart.clicked {
+    animation: heartbeat 1s infinite;
+    text-shadow:
+      0 0 10px #ff6fa3,
+      0 0 20px #ff3a6e,
+      0 0 30px #ff3a6e;
+  }
+  @keyframes heartbeat {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.3);
+    }
+  }
+
+  /* Balloon */
+  .balloon {
+    position: fixed;
+    bottom: -150px;
+    background: radial-gradient(circle at 30% 30%, #ff5f7e, #d6336c);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    opacity: 0.8;
+    animation: floatUp linear infinite;
+    pointer-events: none;
+  }
+  @keyframes floatUp {
+    0% {
+      transform: translateY(0) translateX(0) rotate(0deg);
+      opacity: 0.8;
+    }
+    100% {
+      transform: translateY(-110vh) translateX(30px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  /* Poem text */
+  #poem {
+    font-style: italic;
+    white-space: pre-line;
+    color: #9b2c5b;
+    font-size: 1.2rem;
+    min-height: 6rem;
+    margin-top: 1.5rem;
+  }
+
+  /* Confetti canvas */
+  #confetti-canvas {
+    position: fixed;
+    pointer-events: none;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+  }
+
+  /* Music control */
+  #musicControl {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: #d6336c;
+    border: none;
+    color: white;
+    padding: 0.5rem 0.8rem;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    cursor: pointer;
+    box-shadow: 0 0 10px #d6336c;
+  }
+  #musicControl:hover {
+    background: #a02a53;
+  }
+</style>
+</head>
+<body>
+
+<!-- Pages -->
+<div class="container">
+
+  <!-- Page 1 -->
+  <div class="page active" id="page1">
+    <h1>Welcome!</h1>
+    <p>Enter your name to start the surprise.</p>
+    <input type="text" id="username" placeholder="Your name" aria-label="Your name" />
+    <button id="startBtn">Start Wishes</button>
+  </div>
+
+  <!-- Page 2 -->
+  <div class="page" id="page2">
+    <h1>Hey <span id="displayName"></span>!</h1>
+    <p>Here's something special for my favorite human and best buddy!</p>
+    <button onclick="goToPage(3)">Next</button>
+  </div>
+
+  <!-- Page 3 -->
+  <div class="page" id="page3">
+    <h2>Click the heart to begin!</h2>
+    <div id="heart" title="Click me!">&#10084;</div>
+  </div>
+
+  <!-- Page 4 -->
+  <div class="page" id="page4">
+    <h1>Happy You Day!</h1>
+    <p>This one's from Karim — your forever bestie!</p>
+    <button onclick="goToPage(5)">Next</button>
+  </div>
+
+  <!-- Page 5 -->
+  <div class="page" id="page5">
+    <h2>Tap to read your letters</h2>
+    <button onclick="goToPage(6)">Letter 1</button>
+    <button onclick="goToPage(7)">Letter 2</button>
+  </div>
+
+  <!-- Page 6 -->
+  <div class="page" id="page6">
+    <p>You bring energy ⚡, smiles 😊, and sunshine ☀️ into every room. I’m lucky to call you my best friend! — Karim</p>
+    <button onclick="goToPage(8)">Next</button>
+  </div>
+
+  <!-- Page 7 -->
+  <div class="page" id="page7">
+    <p>From silly laughs 😂 to deep talks 🗣️, you've been my rock! Here's to more memories, jokes, and joy ahead! — Your buddy forever, Karim ❤️</p>
+    <button onclick="goToPage(8)">Next</button>
+  </div>
+
+  <!-- Page 8 -->
+  <div class="page" id="page8">
+    <h2>A Friendly Rhyme</h2>
+    <div id="poem"></div>
+    <button id="nextAfterPoem" disabled>Next</button>
+  </div>
+
+  <!-- Page 9 -->
+  <div class="page" id="page9">
+    <h2>Thanks for Everything!</h2>
+    <p>Best friends like you make life ✨extra✨ fun! Grateful always!</p>
+    <h3>— Karim</h3>
+    <p>Stay awesome! 🌈</p>
+  </div>
+
+</div>
+
+<!-- Balloons (multiple floating balloons) -->
+<script>
+  function createBalloon() {
+    const balloon = document.createElement('div');
+    balloon.classList.add('balloon');
+    const size = Math.random() * 40 + 40; // 40-80 px
+    balloon.style.width = size + 'px';
+    balloon.style.height = size * 1.3 + 'px';
+    balloon.style.left = Math.random() * window.innerWidth + 'px';
+    balloon.style.animationDuration = (Math.random() * 6 + 6) + 's';
+    balloon.style.animationTimingFunction = 'linear';
+    document.body.appendChild(balloon);
+    balloon.addEventListener('animationend', () => balloon.remove());
+  }
+  setInterval(createBalloon, 800);
+</script>
+
+<!-- Confetti Canvas -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- Background music and controls -->
+<audio id="bgMusic" loop src="https://cdn.pixabay.com/download/audio/2022/03/21/audio_6b9d226434.mp3?filename=happy-birthday-6103.mp3"></audio>
+<button id="musicControl" aria-label="Toggle music">♫</button>
+
+<script>
+  // Page switching logic
+  function goToPage(pageNumber) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const nextPage = document.getElementById('page' + pageNumber);
+    nextPage.classList.add('active');
+  }
+
+  // Handle Start button & save name
+  const startBtn = document.getElementById('startBtn');
+  const usernameInput = document.getElementById('username');
+  const displayName = document.getElementById('displayName');
+
+  startBtn.addEventListener('click', () => {
+    const name = usernameInput.value.trim();
+    if (!name) {
+      alert('Please enter your name!');
+      return;
+    }
+    displayName.textContent = name;
+    goToPage(2);
+  });
+
+  // Heart click & animation on Page 3
+  const heart = document.getElementById('heart');
+  heart.addEventListener('click', () => {
+    heart.classList.add('clicked');
+    setTimeout(() => {
+      goToPage(4);
+      heart.classList.remove('clicked');
+    }, 2000);
+  });
+
+  // Poem typing effect on page 8
+  const poemText = `Roses are red,
+Violets are blue,
+Best friends like you,
+Make dreams come true!`;
+
+  function typePoem() {
+    const poemEl = document.getElementById('poem');
+    poemEl.textContent = '';
+    let index = 0;
+    const speed = 80;
+
+    function type() {
+      if (index < poemText.length) {
+        poemEl.textContent += poemText.charAt(index);
+        index++;
+        setTimeout(type, speed);
+      } else {
+        document.getElementById('nextAfterPoem').disabled = false;
+      }
+    }
+    type();
+  }
+
+  // When page 8 becomes active, start typing poem
+  const nextAfterPoemBtn = document.getElementById('nextAfterPoem');
+  nextAfterPoemBtn.addEventListener('click', () => {
+    goToPage(9);
+  });
+
+  // MutationObserver to detect when page8 is active (so poem typing starts)
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      if(mutation.target.id === 'page8' && mutation.target.classList.contains('active')){
+        // reset button disabled
+        nextAfterPoemBtn.disabled = true;
+        typePoem();
+      }
+    });
+  });
+  observer.observe(document.getElementById('page8'), { attributes: true, attributeFilter: ['class'] });
+
+  // Confetti setup (same as before)
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  let confettiPieces = [];
+  const colors = ['#d6336c', '#ffb6c1', '#f8bbd0', '#e91e63', '#c2185b'];
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  function createConfettiPiece() {
+    return {
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      size: Math.random() * 7 + 5,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      speedY: Math.random() * 3 + 2,
+      speedX: (Math.random() - 0.5) * 2,
+      tilt: Math.random() * 10,
+      tiltSpeed: (Math.random() * 0.1) + 0.05,
+    };
+  }
+
+  function initConfetti(count) {
+    confettiPieces = [];
+    for (let i = 0; i < count; i++) {
+      confettiPieces.push(createConfettiPiece());
+    }
+  }
+
+  function drawConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confettiPieces.forEach(p => {
+      p.tilt += p.tiltSpeed;
+      p.x += p.speedX;
+      p.y += p.speedY;
+
+      if (p.y > canvas.height) {
+        p.y = -10;
+        p.x = Math.random() * canvas.width;
+      }
+      if (p.x > canvas.width) p.x = 0;
+      if (p.x < 0) p.x = canvas.width;
+
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.moveTo(p.x + p.tilt, p.y);
+      ctx.lineTo(p.x + p.tilt + p.size / 2, p.y + p.size);
+      ctx.lineTo(p.x + p.tilt - p.size / 2, p.y + p.size);
+      ctx.closePath();
+      ctx.fill();
+    });
+    requestAnimationFrame(drawConfetti);
+  }
+
+  // Start confetti on last page only
+  function manageConfettiVisibility() {
+    const activePage = document.querySelector('.page.active').id;
+    if (activePage === 'page9') {
+      canvas.style.display = 'block';
+    } else {
+      canvas.style.display = 'none';
+    }
+  }
+
+  // Observe page changes to toggle confetti visibility
+  const pages = document.querySelectorAll('.page');
+  const pageObserver = new MutationObserver(() => manageConfettiVisibility());
+  pages.forEach(page => pageObserver.observe(page, { attributes: true, attributeFilter: ['class'] }));
+
+  initConfetti(80);
+  drawConfetti();
+  manageConfettiVisibility();
+
+  // Music control
+  const music = document.getElementById('bgMusic');
+  const musicControl = document.getElementById('musicControl');
+  let musicPlaying = false;
+
+  musicControl.addEventListener('click', () => {
+    if (musicPlaying) {
+      music.pause();
+      musicPlaying = false;
+      musicControl.style.backgroundColor = '#d6336c';
+      musicControl.textContent = '♫';
+    } else {
+      music.play();
+      musicPlaying = true;
+      musicControl.style.backgroundColor = '#a02a53';
+      musicControl.textContent = '🔊';
+    }
+  });
+</script>
+
+</body>
+</html>
